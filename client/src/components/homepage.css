@@ -1,0 +1,48 @@
+/* src/components/homepage.css */
+
+.header {
+    background-color: #610f65;
+    padding: 20px;
+    color: #fff;
+    text-align: center;
+  }
+  
+  .navbar {
+    background-color: #071063;
+    color: rgb(255, 0, 0);
+    padding: 10px;
+  }
+  
+  .navList {
+    list-style: none;
+    display: flex;
+    justify-content: center;
+    margin: 0;
+    padding: 0;
+  }
+  
+  .navItem {
+    margin: 0 15px;
+  }
+  
+  .navLink {
+    color: #ff0000;
+    text-decoration: none;
+    font-size: 18px;
+  }
+
+  .navLink:hover{
+   color: blue;
+  }
+  
+  .content {
+    padding: 20px;
+    min-height: 60vh;
+  }
+  
+  .footer {
+    background-color: #f4f4f4;
+    padding: 10px;
+    text-align: center;
+  }
+  
