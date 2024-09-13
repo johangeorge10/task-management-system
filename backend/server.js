@@ -29,7 +29,6 @@ const Task = mongoose.model('Task', taskSchema);
 // Create a task
 app.post('/api/tasks', async (req, res) => {
   const { taskName, taskDescription, time } = req.body;
-  console.log("call");
   try {
     const task = new Task({
       taskName,
@@ -39,7 +38,6 @@ app.post('/api/tasks', async (req, res) => {
     });
 
     await task.save();
-    console.log("saved");
     res.status(201).send(task);
   } catch (err) {
     res.status(400).send({ error: 'Failed to create task' });
@@ -49,12 +47,48 @@ app.post('/api/tasks', async (req, res) => {
 // Get all tasks
 app.get('/api/tasks', async (req, res) => {
   try {
-    const tasks = await Task.find();
+    const tasks = await Task.find({ isDone: false });
     res.status(200).send(tasks);
   } catch (err) {
     res.status(500).send({ error: 'Failed to fetch tasks' });
   }
 });
+
+// Get completed tasks
+app.get('/api/tasks/completed', async (req, res) => {
+  try {
+    const completedTasks = await Task.find({ isDone: true });
+    res.status(200).send(completedTasks);
+  } catch (err) {
+    res.status(500).send({ error: 'Failed to fetch completed tasks' });
+  }
+});
+
+
+// Mark task as done by ID
+app.patch('/api/tasks/:id/done', async (req, res) => {
+  const { id } = req.params;
+  try {
+    const task = await Task.findById(id);
+    // If task not found, return 404
+    if (!task) {
+      return res.status(404).send({ error: 'Task not found' });
+    }
+    // Check if the task is already marked as done
+    if (task.isDone) {
+      return res.status(400).send({ error: 'Task is already marked as done' });
+    }
+
+    // If not already done, mark the task as done
+    task.isDone = true;
+    await task.save();
+
+    res.status(200).send(task);
+  } catch (err) {
+    res.status(500).send({ error: 'Failed to mark task as done' });
+  }
+});
+
 
 // Delete a task by ID
 app.delete('/api/tasks/:id', async (req, res) => {
@@ -72,7 +106,7 @@ app.delete('/api/tasks/:id', async (req, res) => {
 });
 
 // Start the server
-const port = process.env.PORT || 5000; // Default to port 4000 if not specified
+const port = process.env.PORT || 5000;
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
 });

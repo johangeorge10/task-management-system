@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { MdDelete } from 'react-icons/md'; // Import delete icon
+import { IoCheckmarkDoneCircle } from "react-icons/io5"; // Import mark as done icon
 import './view.css'; // Import the CSS for styling
 
 const ViewTasks = () => {
@@ -8,17 +9,17 @@ const ViewTasks = () => {
   const [expandedTaskId, setExpandedTaskId] = useState(null);
 
   // Fetch tasks from the backend
-  useEffect(() => {
-    const fetchTasks = async () => {
-      try {
-        const response = await axios.get('http://localhost:5000/api/tasks');
-        const sortedTasks = response.data.sort((a, b) => new Date(a.time) - new Date(b.time));
-        setTasks(sortedTasks);
-      } catch (error) {
-        console.error('Failed to fetch tasks', error);
-      }
-    };
+  const fetchTasks = async () => {
+    try {
+      const response = await axios.get('http://localhost:5000/api/tasks');
+      const sortedTasks = response.data.sort((a, b) => new Date(a.time) - new Date(b.time));
+      setTasks(sortedTasks);
+    } catch (error) {
+      console.error('Failed to fetch tasks', error);
+    }
+  };
 
+  useEffect(() => {
     fetchTasks();
   }, []);
 
@@ -35,9 +36,25 @@ const ViewTasks = () => {
   const handleDelete = async (taskId) => {
     try {
       await axios.delete(`http://localhost:5000/api/tasks/${taskId}`);
-      setTasks(tasks.filter(task => task._id !== taskId)); // Update state to remove deleted task
+      fetchTasks(); // Re-fetch tasks to update the view
     } catch (error) {
       console.error('Failed to delete task', error);
+    }
+  };
+
+  // Mark task as done
+  const handleMarkAsDone = async (taskId) => {
+    try {
+      await axios.patch(`http://localhost:5000/api/tasks/${taskId}/done`, { isDone: true });
+      fetchTasks(); // Re-fetch tasks to update the view
+      alert("Task marked as done");
+    } catch (error) {
+      if (error.response && error.response.status === 400 && error.response.data.error === 'Task is already marked as done') {
+        alert("Task is already marked as done");
+      } else {
+        alert("Failed to mark task as done");
+        console.error('Failed to mark task as done', error);
+      }
     }
   };
 
@@ -49,7 +66,7 @@ const ViewTasks = () => {
       ) : (
         <ul className="task-list">
           {tasks.map((task) => (
-            <li key={task._id} className="task-item">
+            <li key={task._id} className={`task-item ${task.isDone ? 'done' : ''}`}>
               <div className="task-time">
                 <span>{new Date(task.time).toLocaleDateString()}</span>
                 <strong>{new Date(task.time).toLocaleTimeString()}</strong>
@@ -57,9 +74,10 @@ const ViewTasks = () => {
               <div className="task-name" onClick={() => toggleTaskDescription(task._id)}>
                 {task.taskName}
               </div>
-              <button className="delete-btn1" onClick={() => handleDelete(task._id)}>
-                <MdDelete />
-              </button>
+              <div className="task-actions">
+                <IoCheckmarkDoneCircle onClick={() => handleMarkAsDone(task._id)} className='done-btn'/>
+                <MdDelete onClick={() => handleDelete(task._id)} className='delete-btn'/>
+              </div>
               {expandedTaskId === task._id && (
                 <div className="task-description">{task.taskDescription}</div>
               )}

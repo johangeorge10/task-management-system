@@ -3,7 +3,7 @@ import React from 'react';
 import { Route, Routes, Link } from 'react-router-dom';
 import CreateTask from './create';
 import ViewTasks from './view';
-import DeleteTask from './delete';
+import CompletedTasks from './completed';
 import './homepage.css';  // Import the CSS file
 
 const Homepage = () => {
@@ -21,7 +21,7 @@ const Homepage = () => {
             <Link to="/view" className="navLink">View Tasks</Link>
           </li>
           <li className="navItem">
-            <Link to="/delete" className="navLink">Delete Task</Link>
+            <Link to="/completed" className="navLink">Completed Tasks</Link>
           </li>
         </ul>
       </nav>
@@ -29,7 +29,7 @@ const Homepage = () => {
         <Routes>
           <Route path="/create" element={<CreateTask />} />
           <Route path="/view" element={<ViewTasks />} />
-          <Route path="/delete" element={<DeleteTask />} />
+          <Route path="/completed" element={<CompletedTasks />} />
         </Routes>
       </main>
       <footer className="footer">

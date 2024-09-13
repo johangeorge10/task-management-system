@@ -8,7 +8,7 @@
   }
   
   .navbar {
-    background-color: #071063;
+    background-color: #008080;
     color: rgb(255, 0, 0);
     padding: 10px;
   }
@@ -32,13 +32,19 @@
   }
 
   .navLink:hover{
-   color: blue;
+   color: rgb(36, 0, 103);
   }
   
   .content {
     padding: 20px;
     min-height: 60vh;
+    background-image: url('../images/ois.jpeg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    color: white; /* Ensure text is readable on the background */
   }
+  
   
   .footer {
     background-color: #f4f4f4;
