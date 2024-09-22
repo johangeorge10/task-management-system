@@ -89,9 +89,9 @@
 /* Additional styling for completed tasks */
 .task-item.done .task-name {
   text-decoration: line-through; /* Strike-through for completed tasks */
-  color: #000000; /* Grey color for completed tasks */
+  color: #6c757d; /* Grey color for completed tasks */
 }
 
 .task-item.done .task-time strong {
-  color: #000000;
+  color: #6c757d;
 }
